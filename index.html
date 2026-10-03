@@ -7,12 +7,12 @@
     <style>
         /* --- Soft Cyberpunk / Dark Pastel --- */
         :root {
-            --bg-dark: #0b0e14; /* Mat ve koyu gece mavisi/siyah */
-            --card-bg: rgba(18, 24, 38, 0.75); /* Yarı saydam yumuşak kart */
-            --soft-cyan: #70d6ff; /* Soft gök mavisi */
-            --soft-purple: #c77dff; /* Soft lavanta/mor */
-            --text-main: #e2e8f0; /* Yumuşak beyaz/gri */
-            --text-muted: #94a3b8; /* Muted detay yazısı */
+            --bg-dark: #0b0e14;
+            --card-bg: rgba(18, 24, 38, 0.75);
+            --soft-cyan: #70d6ff;
+            --soft-purple: #c77dff;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
             --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
             --font-code: 'JetBrains Mono', 'Fira Code', monospace;
         }
@@ -21,13 +21,13 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            cursor: none; /* Özel cursor için varsayılan imleci gizle */
         }
 
         body, html {
             width: 100%;
             height: 100%;
             background-color: var(--bg-dark);
-            /* Arka planda yumuşak Cyberpunk ışık süzmesi */
             background-image:
                 radial-gradient(circle at 15% 20%, rgba(112, 214, 255, 0.08) 0%, transparent 40%),
                 radial-gradient(circle at 85% 80%, rgba(199, 125, 255, 0.08) 0%, transparent 40%);
@@ -39,7 +39,50 @@
             overflow: hidden;
         }
 
-        /* Ana Kart (Glassmorphism & Soft Border) */
+        /* --- Custom Cursor --- */
+        #cursor-dot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 8px;
+            background-color: var(--soft-cyan);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+
+        #cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 32px;
+            height: 32px;
+            border: 1px solid rgba(112, 214, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out, width 0.2s, height 0.2s, border-color 0.2s;
+        }
+
+        /* Cursor Hover Etkileşimi */
+        body.hovering #cursor-dot {
+            width: 12px;
+            height: 12px;
+            background-color: var(--soft-purple);
+        }
+
+        body.hovering #cursor-outline {
+            width: 48px;
+            height: 48px;
+            border-color: var(--soft-purple);
+            background: rgba(199, 125, 255, 0.05);
+        }
+
+        /* Ana Kart */
         .card {
             position: relative;
             width: 90%;
@@ -52,6 +95,51 @@
             border-radius: 16px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
                         0 0 30px rgba(112, 214, 255, 0.05);
+            transition: transform 0.2s ease-out;
+            overflow: hidden;
+        }
+
+        /* Kart İçi Spotlight Efekti */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: var(--mouse-y, 50%);
+            left: var(--mouse-x, 50%);
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(112, 214, 255, 0.12) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            border-radius: 50%;
+        }
+
+        /* Terminal Status Rozeti */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 12px;
+            background: rgba(112, 214, 255, 0.08);
+            border: 1px solid rgba(112, 214, 255, 0.2);
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-family: var(--font-code);
+            color: var(--soft-cyan);
+            margin-bottom: 20px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #38ef7d;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #38ef7d;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
         }
 
         /* Başlık Alanı */
@@ -135,8 +223,9 @@
         }
 
         .tag:hover {
-            background: rgba(199, 125, 255, 0.2);
+            background: rgba(199, 125, 255, 0.25);
             border-color: var(--soft-purple);
+            box-shadow: 0 0 12px rgba(199, 125, 255, 0.3);
             transform: translateY(-2px);
         }
 
@@ -163,23 +252,41 @@
         .btn-github:hover {
             background: #a0e5ff;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(112, 214, 255, 0.35);
+            box-shadow: 0 6px 20px rgba(112, 214, 255, 0.4);
         }
 
-        /* Alt Yazı */
+        /* Alt Yazı & Canlı Saat */
         .footer {
             margin-top: 25px;
             text-align: center;
             font-size: 0.78em;
             color: var(--text-muted);
             font-family: var(--font-code);
-            opacity: 0.6;
+            opacity: 0.8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer span {
+            color: var(--soft-cyan);
         }
     </style>
 </head>
 <body>
 
-    <div class="card">
+    <!-- Özel Cursor Elemanları -->
+    <div id="cursor-dot"></div>
+    <div id="cursor-outline"></div>
+
+    <div class="card" id="interactive-card">
+        <!-- Status Bar -->
+        <div style="text-align: center;">
+            <div class="status-badge">
+                <span class="status-dot"></span> SEC_LEVEL: ACTIVE // NODE_READY
+            </div>
+        </div>
+
         <!-- Başlık -->
         <div class="header">
             <h1>canloudsec</h1>
@@ -190,7 +297,7 @@
         <div class="info-list">
             <div class="info-item">
                 <span class="label">> Durum</span>
-                <span class="value">Sertifika Sınavına Hazırlanıyor</span>
+                <span class="value">OSCP+ Sınavına Hazırlanıyor</span>
             </div>
             <div class="info-item">
                 <span class="label">> Konum</span>
@@ -210,24 +317,86 @@
         <div class="skills-section">
             <div class="skills-title">Uzmanlık Alanları</div>
             <div class="skills-container">
-                <span class="tag">Linux</span>
-                <span class="tag">Pentesting</span>
-                <span class="tag">Ağ Taraması</span>
-                <span class="tag">Log Analizi</span>
-                <span class="tag">CTF</span>
+                <span class="tag interactive-hover">Linux</span>
+                <span class="tag interactive-hover">Pentesting</span>
+                <span class="tag interactive-hover">Ağ Taraması</span>
+                <span class="tag interactive-hover">Log Analizi</span>
+                <span class="tag interactive-hover">CTF</span>
             </div>
         </div>
 
         <!-- Buton -->
         <div class="actions">
-            <a href="https://github.com/canloudsec" target="_blank" class="btn-github">GitHub Profilini İncele</a>
+            <a href="https://github.com/canloudsec" target="_blank" class="btn-github interactive-hover">GitHub Profilini İncele</a>
         </div>
 
-        <!-- Footer -->
+        <!-- Footer & Canlı Saat -->
         <div class="footer">
-            Node: Monster // System Online
+            <div>Node: <span>Monster</span></div>
+            <div id="live-clock">00:00:00</div>
         </div>
     </div>
 
+    <script>
+        // --- Custom Cursor Logic ---
+        const cursorDot = document.getElementById("cursor-dot");
+        const cursorOutline = document.getElementById("cursor-outline");
+
+        window.addEventListener("mousemove", (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+
+            // Nokta anında takip eder
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+
+            // Halka hafif gecikmeli yumuşak gelir
+            cursorOutline.animate({
+                left: `${posX}px`,
+                top: `${posY}px`
+            }, { duration: 150, fill: "forwards" });
+        });
+
+        // Hover durumunda Cursor büyütme
+        const interactives = document.querySelectorAll('.interactive-hover, a, .tag');
+        interactives.forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+        });
+
+        // --- Kart İçi 3D Spotlight & Tilt Efekti ---
+        const card = document.getElementById('interactive-card');
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            card.style.setProperty('--mouse-x', `${x}px`);
+            card.style.setProperty('--mouse-y', `${y}px`);
+
+            // Hafif 3D Eğim
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateX = (y - centerY) / 35;
+            const rotateY = (centerX - x) / 35;
+
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+        });
+
+        // --- Canlı Dijital Saat ---
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('live-clock').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
 </body>
 </html>
