@@ -280,7 +280,6 @@
     <div id="cursor-outline"></div>
 
     <div class="card" id="interactive-card">
-        <!-- Status Bar -->
         <div style="text-align: center;">
             <div class="status-badge">
                 <span class="status-dot"></span> SEC_LEVEL: ACTIVE // NODE_READY
@@ -293,7 +292,6 @@
             <div class="subtitle">Network Analyser & Pentester</div>
         </div>
 
-        <!-- Profil Bilgileri -->
         <div class="info-list">
             <div class="info-item">
                 <span class="label">> Durum</span>
@@ -313,7 +311,6 @@
             </div>
         </div>
 
-        <!-- Yetkinlikler -->
         <div class="skills-section">
             <div class="skills-title">Uzmanlık Alanları</div>
             <div class="skills-container">
@@ -325,7 +322,6 @@
             </div>
         </div>
 
-        <!-- Buton -->
         <div class="actions">
             <a href="https://github.com/canloudsec" target="_blank" class="btn-github interactive-hover">GitHub Profilini İncele</a>
         </div>
@@ -338,7 +334,7 @@
     </div>
 
     <script>
-        // --- Custom Cursor Logic ---
+
         const cursorDot = document.getElementById("cursor-dot");
         const cursorOutline = document.getElementById("cursor-outline");
 
@@ -350,7 +346,6 @@
             cursorDot.style.left = `${posX}px`;
             cursorDot.style.top = `${posY}px`;
 
-            // Halka hafif gecikmeli yumuşak gelir
             cursorOutline.animate({
                 left: `${posX}px`,
                 top: `${posY}px`
@@ -364,7 +359,6 @@
             el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
         });
 
-        // --- Kart İçi 3D Spotlight & Tilt Efekti ---
         const card = document.getElementById('interactive-card');
         card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
@@ -387,7 +381,6 @@
             card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
         });
 
-        // --- Canlı Dijital Saat ---
         function updateClock() {
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
