@@ -5,199 +5,195 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>canloudsec // Profile</title>
     <style>
-        /* --- Soft Cyberpunk / Dark Pastel --- */
         :root {
-            --bg-dark: #0b0e14;
-            --card-bg: rgba(18, 24, 38, 0.75);
-            --soft-cyan: #70d6ff;
-            --soft-purple: #c77dff;
-            --text-main: #e2e8f0;
+            --bg-dark: #07090e;
+            --card-bg: rgba(13, 17, 26, 0.85);
+            --cyan-glow: #00f2fe;
+            --purple-glow: #7000ff;
+            --pink-glow: #ff007f;
+            --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            --font-code: 'JetBrains Mono', 'Fira Code', monospace;
+            --font-main: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            cursor: none; /* Özel cursor için varsayılan imleci gizle */
+            cursor: none;
         }
 
         body, html {
             width: 100%;
             height: 100%;
             background-color: var(--bg-dark);
-            background-image:
-                radial-gradient(circle at 15% 20%, rgba(112, 214, 255, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 85% 80%, rgba(199, 125, 255, 0.08) 0%, transparent 40%);
             color: var(--text-main);
             font-family: var(--font-main);
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- Canlı Arka Plan --- */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(112, 0, 255, 0.25) 0%, rgba(0, 242, 254, 0.15) 50%, transparent 80%);
+            filter: blur(80px);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: pulse-glow 8s infinite alternate ease-in-out;
+        }
+
+        @keyframes pulse-glow {
+            0% { transform: scale(1) translate(-10%, -10%); }
+            100% { transform: scale(1.2) translate(10%, 10%); }
         }
 
         /* --- Custom Cursor --- */
-        #cursor-dot {
+        #cursor-dot, #cursor-outline {
             position: fixed;
             top: 0;
             left: 0;
-            width: 8px;
-            height: 8px;
-            background-color: var(--soft-cyan);
             border-radius: 50%;
             pointer-events: none;
             z-index: 9999;
             transform: translate(-50%, -50%);
-            transition: width 0.2s, height 0.2s, background-color 0.2s;
+            transition: width 0.2s, height 0.2s, border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+        }
+
+        #cursor-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--cyan-glow);
+            box-shadow: 0 0 10px var(--cyan-glow);
         }
 
         #cursor-outline {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 32px;
-            height: 32px;
-            border: 1px solid rgba(112, 214, 255, 0.5);
-            border-radius: 50%;
-            pointer-events: none;
+            width: 30px;
+            height: 30px;
+            border: 1px solid rgba(0, 242, 254, 0.5);
             z-index: 9998;
-            transform: translate(-50%, -50%);
-            transition: transform 0.1s ease-out, width 0.2s, height 0.2s, border-color 0.2s;
         }
 
-        /* Cursor Hover Etkileşimi */
         body.hovering #cursor-dot {
-            width: 12px;
-            height: 12px;
-            background-color: var(--soft-purple);
+            width: 10px;
+            height: 10px;
+            background-color: var(--pink-glow);
+            box-shadow: 0 0 12px var(--pink-glow);
         }
 
         body.hovering #cursor-outline {
-            width: 48px;
-            height: 48px;
-            border-color: var(--soft-purple);
-            background: rgba(199, 125, 255, 0.05);
+            width: 46px;
+            height: 46px;
+            border-color: var(--pink-glow);
+            background: rgba(255, 0, 127, 0.08);
         }
 
-        /* Ana Kart */
+        /* --- Cyber/Modern Card --- */
         .card {
             position: relative;
             width: 90%;
-            max-width: 650px;
+            max-width: 520px;
             padding: 40px;
             background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(112, 214, 255, 0.2);
-            border-radius: 16px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
-                        0 0 30px rgba(112, 214, 255, 0.05);
-            transition: transform 0.2s ease-out;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6),
+                        0 0 40px rgba(112, 0, 255, 0.15);
+            transition: transform 0.15s ease-out, border-color 0.3s ease, box-shadow 0.3s ease;
             overflow: hidden;
         }
 
-        /* Kart İçi Spotlight Efekti */
-        .card::before {
+        /* Scanline Deseni */
+        .card::after {
             content: '';
             position: absolute;
-            top: var(--mouse-y, 50%);
-            left: var(--mouse-x, 50%);
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(112, 214, 255, 0.12) 0%, transparent 70%);
-            transform: translate(-50%, -50%);
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
             pointer-events: none;
-            border-radius: 50%;
+            opacity: 0.3;
         }
 
-        /* Terminal Status Rozeti */
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 4px 12px;
-            background: rgba(112, 214, 255, 0.08);
-            border: 1px solid rgba(112, 214, 255, 0.2);
-            border-radius: 12px;
-            font-size: 0.75em;
-            font-family: var(--font-code);
-            color: var(--soft-cyan);
-            margin-bottom: 20px;
+        .card:hover {
+            border-color: rgba(0, 242, 254, 0.4);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7),
+                        0 0 50px rgba(0, 242, 254, 0.25);
         }
 
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            background-color: #38ef7d;
-            border-radius: 50%;
-            box-shadow: 0 0 8px #38ef7d;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-
-        /* Başlık Alanı */
+        /* Header */
         .header {
-            text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 32px;
         }
 
         .header h1 {
-            font-size: 2.4em;
-            font-weight: 700;
+            font-size: 2.2em;
+            font-weight: 800;
             font-family: var(--font-code);
-            background: linear-gradient(135deg, var(--soft-cyan), var(--soft-purple));
+            background: linear-gradient(135deg, var(--cyan-glow) 0%, var(--purple-glow) 50%, var(--pink-glow) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: 2px;
+            letter-spacing: -0.5px;
+            filter: drop-shadow(0 2px 10px rgba(112, 0, 255, 0.3));
         }
 
         .header .subtitle {
             color: var(--text-muted);
-            font-size: 0.95em;
-            margin-top: 8px;
+            font-size: 0.88em;
+            margin-top: 6px;
             font-family: var(--font-code);
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
 
-        /* İçerik Listesi */
+        /* Info List */
         .info-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 14px;
             border-top: 1px solid rgba(255, 255, 255, 0.08);
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             padding: 24px 0;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
+            position: relative;
+            z-index: 2;
         }
 
         .info-item {
             display: flex;
-            font-size: 0.95em;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9em;
         }
 
         .info-item .label {
-            width: 110px;
-            color: var(--soft-cyan);
+            color: var(--cyan-glow);
             font-family: var(--font-code);
-            font-size: 0.9em;
+            font-size: 0.85em;
             opacity: 0.9;
         }
 
         .info-item .value {
             color: var(--text-main);
-            font-weight: 400;
+            font-weight: 500;
         }
 
-        /* Etiketler (Skills) */
+        /* Skills */
+        .skills-section {
+            margin-bottom: 32px;
+            position: relative;
+            z-index: 2;
+        }
+
         .skills-title {
-            font-size: 0.85em;
+            font-size: 0.75em;
             color: var(--text-muted);
             font-family: var(--font-code);
             text-transform: uppercase;
@@ -212,81 +208,72 @@
         }
 
         .tag {
-            background: rgba(199, 125, 255, 0.1);
-            color: var(--soft-purple);
-            border: 1px solid rgba(199, 125, 255, 0.25);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.82em;
+            background: rgba(112, 0, 255, 0.12);
+            color: #d8b4fe;
+            border: 1px solid rgba(112, 0, 255, 0.3);
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.8em;
             font-family: var(--font-code);
             transition: all 0.25s ease;
         }
 
         .tag:hover {
-            background: rgba(199, 125, 255, 0.25);
-            border-color: var(--soft-purple);
-            box-shadow: 0 0 12px rgba(199, 125, 255, 0.3);
+            border-color: var(--pink-glow);
+            color: var(--pink-glow);
+            background: rgba(255, 0, 127, 0.15);
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.3);
             transform: translateY(-2px);
         }
 
-        /* Buton */
+        /* Actions */
         .actions {
-            margin-top: 32px;
-            text-align: center;
+            position: relative;
+            z-index: 2;
         }
 
         .btn-github {
-            display: inline-block;
-            padding: 12px 28px;
-            color: var(--bg-dark);
-            background: var(--soft-cyan);
-            font-weight: 600;
+            display: block;
+            width: 100%;
+            text-align: center;
+            padding: 14px;
+            color: #000;
+            background: linear-gradient(135deg, var(--cyan-glow), #4facfe);
+            font-weight: 700;
             font-family: var(--font-code);
-            font-size: 0.9em;
+            font-size: 0.88em;
             text-decoration: none;
-            border-radius: 8px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 242, 254, 0.3);
             transition: all 0.25s ease;
-            box-shadow: 0 4px 15px rgba(112, 214, 255, 0.2);
         }
 
         .btn-github:hover {
-            background: #a0e5ff;
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(112, 214, 255, 0.4);
+            box-shadow: 0 6px 25px rgba(0, 242, 254, 0.5);
+            filter: brightness(1.1);
         }
 
-        /* Alt Yazı & Canlı Saat */
+        /* Footer */
         .footer {
-            margin-top: 25px;
-            text-align: center;
-            font-size: 0.78em;
+            margin-top: 24px;
+            font-size: 0.75em;
             color: var(--text-muted);
             font-family: var(--font-code);
-            opacity: 0.8;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
-        }
-
-        .footer span {
-            color: var(--soft-cyan);
+            position: relative;
+            z-index: 2;
         }
     </style>
 </head>
 <body>
 
-    <!-- Özel Cursor Elemanları -->
     <div id="cursor-dot"></div>
     <div id="cursor-outline"></div>
 
     <div class="card" id="interactive-card">
-        <div style="text-align: center;">
-            <div class="status-badge">
-                <span class="status-dot"></span> SEC_LEVEL: ACTIVE // NODE_READY
-            </div>
-        </div>
-
-        <!-- Başlık -->
         <div class="header">
             <h1>canloudsec</h1>
             <div class="subtitle">Network Analyser & Pentester</div>
@@ -294,19 +281,19 @@
 
         <div class="info-list">
             <div class="info-item">
-                <span class="label">> Durum</span>
+                <span class="label">Durum</span>
                 <span class="value">OSCP+ Sınavına Hazırlanıyor</span>
             </div>
             <div class="info-item">
-                <span class="label">> Konum</span>
+                <span class="label">Konum</span>
                 <span class="value">Antalya</span>
             </div>
             <div class="info-item">
-                <span class="label">> Uzmanlık</span>
+                <span class="label">Uzmanlık</span>
                 <span class="value">Port Tarama, Linux, Sistem Analizi</span>
             </div>
             <div class="info-item">
-                <span class="label">> Odak</span>
+                <span class="label">Odak</span>
                 <span class="value">Ağ Protokolleri & Savunma Mimarileri</span>
             </div>
         </div>
@@ -326,33 +313,33 @@
             <a href="https://github.com/canloudsec" target="_blank" class="btn-github interactive-hover">GitHub Profilini İncele</a>
         </div>
 
-        <!-- Footer & Canlı Saat -->
         <div class="footer">
-            <div>Node: <span>Monster</span></div>
             <div id="live-clock">00:00:00</div>
         </div>
     </div>
 
     <script>
-
         const cursorDot = document.getElementById("cursor-dot");
         const cursorOutline = document.getElementById("cursor-outline");
+        let mouseX = 0, mouseY = 0;
+        let outlineX = 0, outlineY = 0;
 
         window.addEventListener("mousemove", (e) => {
-            const posX = e.clientX;
-            const posY = e.clientY;
-
-            // Nokta anında takip eder
-            cursorDot.style.left = `${posX}px`;
-            cursorDot.style.top = `${posY}px`;
-
-            cursorOutline.animate({
-                left: `${posX}px`,
-                top: `${posY}px`
-            }, { duration: 150, fill: "forwards" });
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursorDot.style.left = `${mouseX}px`;
+            cursorDot.style.top = `${mouseY}px`;
         });
 
-        // Hover durumunda Cursor büyütme
+        function animateCursor() {
+            outlineX += (mouseX - outlineX) * 0.22;
+            outlineY += (mouseY - outlineY) * 0.22;
+            cursorOutline.style.left = `${outlineX}px`;
+            cursorOutline.style.top = `${outlineY}px`;
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
         const interactives = document.querySelectorAll('.interactive-hover, a, .tag');
         interactives.forEach(el => {
             el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
@@ -365,14 +352,8 @@
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
 
-            card.style.setProperty('--mouse-x', `${x}px`);
-            card.style.setProperty('--mouse-y', `${y}px`);
-
-            // Hafif 3D Eğim
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const rotateX = (y - centerY) / 35;
-            const rotateY = (centerX - x) / 35;
+            const rotateX = ((y - rect.height / 2) / 35).toFixed(2);
+            const rotateY = (((rect.width / 2) - x) / 35).toFixed(2);
 
             card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
         });
@@ -383,10 +364,7 @@
 
         function updateClock() {
             const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            document.getElementById('live-clock').textContent = `${hours}:${minutes}:${seconds}`;
+            document.getElementById('live-clock').textContent = now.toTimeString().split(' ')[0];
         }
         setInterval(updateClock, 1000);
         updateClock();
